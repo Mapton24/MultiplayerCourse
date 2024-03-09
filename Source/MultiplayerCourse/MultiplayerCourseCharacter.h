@@ -40,8 +40,7 @@ class AMultiplayerCourseCharacter : public ACharacter
 public:
 	AMultiplayerCourseCharacter();
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
-	void ServerRPCFunction();
+
 	
 
 protected:
@@ -68,5 +67,8 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMesh> SphereMesh;
+
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+	void ServerRPCFunction(int Value);
 };
 

@@ -52,14 +52,14 @@ AMultiplayerCourseCharacter::AMultiplayerCourseCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
 
-void AMultiplayerCourseCharacter::ServerRPCFunction_Implementation()
+void AMultiplayerCourseCharacter::ServerRPCFunction_Implementation(int Value)
 {
 	if (HasAuthority())
 	{
 #if 0
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Server: ServerRPCFunction_Implementation"));
 #endif
-
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, FString::Printf(TEXT("MyArg: %d"), Value));
 		if (!SphereMesh)
 		{
 			return;
@@ -86,7 +86,14 @@ void AMultiplayerCourseCharacter::ServerRPCFunction_Implementation()
 		}
 	}
 }
-
+bool AMultiplayerCourseCharacter::ServerRPCFunction_Validate(int Value)
+{
+	if(Value >= 0 && Value <= 100)
+	{
+		return true;
+	}
+	return false;
+}
 void AMultiplayerCourseCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -101,6 +108,8 @@ void AMultiplayerCourseCharacter::BeginPlay()
 		}
 	}
 }
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
