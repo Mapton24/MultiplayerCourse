@@ -68,7 +68,16 @@ public:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UStaticMesh> SphereMesh;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> ExplosionEffect;
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRPCFunction(int Value);
+
+	UFUNCTION(Client, Reliable, BlueprintCallable)
+	void ClientRPCFunction();
+
+	
+	
 };
 

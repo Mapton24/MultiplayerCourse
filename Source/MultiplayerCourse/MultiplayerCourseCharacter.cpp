@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/StaticMeshActor.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -64,8 +65,10 @@ void AMultiplayerCourseCharacter::ServerRPCFunction_Implementation(int Value)
 		{
 			return;
 		}
-		
-		AStaticMeshActor* StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass());
+		FActorSpawnParameters SpawnParameters;
+		SpawnParameters.Owner = this;
+		AStaticMeshActor* StaticMeshActor = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnParameters);
+		//StaticMeshActor->SetOwner();
 		if(StaticMeshActor)
 		{
 			StaticMeshActor->SetReplicates(true);
@@ -109,6 +112,15 @@ void AMultiplayerCourseCharacter::BeginPlay()
 	}
 }
 
+void AMultiplayerCourseCharacter::ClientRPCFunction_Implementation()
+{
+	if (ExplosionEffect)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(),
+			FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+	}
+
+}
 
 
 //////////////////////////////////////////////////////////////////////////
