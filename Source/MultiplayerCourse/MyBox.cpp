@@ -24,7 +24,7 @@ void AMyBox::BeginPlay()
 
 	if(HasAuthority())
 	{
-		GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::DecreaseReplicatedVar, 2.0f, false);
+		GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::NetMulticastRPCExplode, 2.0f, false);
 	}
 }
 
@@ -77,5 +77,20 @@ void AMyBox::DecreaseReplicatedVar()
 			GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::DecreaseReplicatedVar, 2.0f, false);
 		}
 	}
+}
+
+void AMyBox::NetMulticastRPCExplode_Implementation()
+{
+	if (HasAuthority())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Server %d: NetMulticastRPCExplode"), GPlayInEditorID));
+		GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::NetMulticastRPCExplode, 2.0f, false);
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Client %d: NetMulticastRPCExplode"), GPlayInEditorID));
+
+	}
+	
 }
 
