@@ -34,8 +34,11 @@ public:
 	void DecreaseReplicatedVar();
 	FTimerHandle TestTimer;
 
-	UFUNCTION(NetMulticast, Reliable, BlueprintCallable)
+	UFUNCTION(NetMulticast, Unreliable, BlueprintCallable)
 	void NetMulticastRPCExplode();
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UParticleSystem> ExplosionEffect;
 	
 
 };

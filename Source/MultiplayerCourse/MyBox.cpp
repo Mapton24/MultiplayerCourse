@@ -3,6 +3,7 @@
 
 #include "MyBox.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 // Sets default values
@@ -83,14 +84,17 @@ void AMyBox::NetMulticastRPCExplode_Implementation()
 {
 	if (HasAuthority())
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Server %d: NetMulticastRPCExplode"), GPlayInEditorID));
+		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("Server %d: NetMulticastRPCExplode"), GPlayInEditorID));
 		GetWorld()->GetTimerManager().SetTimer(TestTimer, this, &AMyBox::NetMulticastRPCExplode, 2.0f, false);
 	}
 	else
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Client %d: NetMulticastRPCExplode"), GPlayInEditorID));
-
+		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Client %d: NetMulticastRPCExplode"), GPlayInEditorID));
 	}
-	
+	if (!IsRunningDedicatedServer())
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation(),
+			FRotator::ZeroRotator, true, EPSCPoolMethod::AutoRelease);
+	}
 }
 
