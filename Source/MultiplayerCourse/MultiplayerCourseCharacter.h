@@ -39,6 +39,9 @@ class AMultiplayerCourseCharacter : public ACharacter
 
 public:
 	AMultiplayerCourseCharacter();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ServerRPCFunction();
 	
 
 protected:
@@ -62,5 +65,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMesh> SphereMesh;
 };
 
