@@ -1,0 +1,1 @@
+"C:\Program Files\Epic Games\UE_5.2\Engine\Binaries\Win64\UnrealEditor.exe" "G:\Projects\5.2\MultiplayerCourse\MultiplayerCourse.uproject" -game -ResX=960 -ResY=540 -log -WINDOWED
