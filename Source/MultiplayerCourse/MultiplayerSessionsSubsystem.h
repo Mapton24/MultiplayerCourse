@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "MultiplayerSessionsSubsystem.generated.h"
 
@@ -24,5 +25,12 @@ private:
 
 	UFUNCTION()
 	void PrintString(const FString& String);
+
+	IOnlineSessionPtr SessionInterface;
+
+	UFUNCTION(BlueprintCallable)
+	void CreateServer(const FString& ServerName);
+	UFUNCTION(BlueprintCallable)
+	void FindServer(const FString& ServerName);
 
 };
