@@ -5,6 +5,7 @@
 
 #include "OnlineSessionSettings.h"
 #include "OnlineSubsystem.h"
+#include "Online/OnlineSessionNames.h"
 
 
 UMultiplayerSessionsSubsystem::UMultiplayerSessionsSubsystem()
@@ -65,11 +66,24 @@ void UMultiplayerSessionsSubsystem::CreateServer(const FString& ServerName)
 void UMultiplayerSessionsSubsystem::FindServer(const FString& ServerName)
 {
 	PrintString("FindServer");
+	if (ServerName.IsEmpty())
+	{
+		PrintString("Server name cannot be empty");
+		return;
+	}
+	
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	bool bIsLAN = false;
+	if (IOnlineSubsystem::Get()->GetSubsystemName() == "NULL")
+	{
+		bIsLAN = true;
+	}
+	SessionSearch->bIsLanQuery = bIsLAN;
+	SessionSearch->MaxSearchResults = 9999;
+	SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+	
+	SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 }
-
-
-
-
 
 void UMultiplayerSessionsSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -85,7 +99,7 @@ void UMultiplayerSessionsSubsystem::Initialize(FSubsystemCollectionBase& Collect
 		{
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UMultiplayerSessionsSubsystem::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UMultiplayerSessionsSubsystem::OnDestroySessionComplete);
-
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UMultiplayerSessionsSubsystem::OnFindSessionsComplete);
 		}
 	}
 }
@@ -108,6 +122,21 @@ void UMultiplayerSessionsSubsystem::OnDestroySessionComplete(FName SessionName, 
 	{
 		bCreateSessionAfterDestroy = false;
 		CreateServer(DestroyServerName);
+	}
+}
+
+void UMultiplayerSessionsSubsystem::OnFindSessionsComplete(bool bWasSuccesful)
+{
+	if(!bWasSuccesful) return;
+	TArray<FOnlineSessionSearchResult> Results = SessionSearch->SearchResults;
+	if(Results.Num() > 0)
+	{
+		FString Msg = FString::Printf(TEXT("%d sessions found."), Results.Num());
+		PrintString(Msg);
+	}
+	else
+	{
+		PrintString("0 Sessions found.");
 	}
 }
 

@@ -32,12 +32,14 @@ private:
 	void CreateServer(const FString& ServerName);
 	UFUNCTION(BlueprintCallable)
 	void FindServer(const FString& ServerName);
-	UFUNCTION()
+
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
-	UFUNCTION()
 	void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
+	void OnFindSessionsComplete(bool bWasSuccesful);
 
 	bool bCreateSessionAfterDestroy;
 	FString DestroyServerName;
+
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
 };
