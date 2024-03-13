@@ -36,9 +36,12 @@ private:
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnDestroySessionComplete(FName SessionName, bool bWasSuccessful);
 	void OnFindSessionsComplete(bool bWasSuccesful);
+	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result);
 
 	bool bCreateSessionAfterDestroy;
 	FString DestroyServerName;
+	FString ServerNameToFind;
+	FName MySessionName;
 
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 
